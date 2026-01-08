@@ -2,22 +2,22 @@
 import { Buffer } from 'node:buffer';
 
 export interface QueueItem {
-  requestId: string;
-  correlationId: string;
-  method: string;
-  path: string;
-  queryParams: Record<string, any>;
-  headers: Record<string, string>;
-  body: string | null; // base64
-  status: 'pending' | 'processing' | 'completed' | 'failed' | 'dead';
-  result: any | null;
-  resultStatusCode: number | null;
-  error: string | null;
-  retryAfter?: number;
-  queuePosition?: number;
-  estimatedWait?: number;
-  attempts: number;
-  createdAt: number;
+    requestId: string;
+    correlationId: string;
+    method: string;
+    path: string;
+    queryParams: Record<string, any>;
+    headers: Record<string, string>;
+    body: string | null; // base64
+    status: 'pending' | 'processing' | 'completed' | 'failed' | 'dead';
+    result: any | null;
+    resultStatusCode: number | null;
+    error: string | null;
+    retryAfter?: number;
+    queuePosition?: number;
+    estimatedWait?: number;
+    attempts: number;
+    createdAt: number;
 }
 
 // In-memory store
@@ -25,9 +25,17 @@ export interface QueueItem {
 const requestStore = new Map<string, QueueItem>();
 const correlationIndex = new Map<string, string>();
 
+function getEnvVar(key: string): string {
+    const value = process.env[key];
+    if (!value) {
+        throw new Error(`Missing environment variable: ${key}`);
+    }
+    return value;
+}
+
 // Default to local ThetaData Terminal
 // Ensure trailing slash is handled or not duplicated
-const THETADATA_BASE_URL = process.env.THETADATA_BASE_URL || 'http://127.0.0.1:25510/v2';
+const THETADATA_BASE_URL = getEnvVar('THETADATA_BASE_URL');
 
 export function getStats() {
     const values = Array.from(requestStore.values());
@@ -40,13 +48,53 @@ export function getStats() {
     };
 }
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+let isProcessing = false;
+let cleanupInterval: NodeJS.Timeout | null = null;
+
+function startBackgroundProcesses() {
+    if (!cleanupInterval) {
+        // Run cleanup every 10 minutes
+        cleanupInterval = setInterval(cleanupStaleRequests, 10 * 60 * 1000);
+    }
+
+    if (!isProcessing) {
+        processQueueLoop();
+    }
+}
+
+function cleanupStaleRequests() {
+    const NOW = Date.now();
+    const STALE_THRESHOLD = 10 * 60 * 1000; // 10 minutes
+
+    for (const [id, item] of requestStore.entries()) {
+        if (NOW - item.createdAt > STALE_THRESHOLD) {
+            requestStore.delete(id);
+            if (item.correlationId) {
+                correlationIndex.delete(item.correlationId);
+            }
+        }
+    }
+}
+
 export function getRequest(requestId: string) {
-    return requestStore.get(requestId);
+    const item = requestStore.get(requestId);
+
+    // Cleanup if completed and requested (return valuable data then delete)
+    if (item && item.status === 'completed') {
+        requestStore.delete(requestId);
+        if (item.correlationId) {
+            correlationIndex.delete(item.correlationId);
+        }
+    }
+
+    return item;
 }
 
 export function submitRequest(payload: any): QueueItem {
     const { correlation_id, method, path, query_params, headers, body } = payload;
-    
+
     // Idempotency check
     if (correlation_id && correlationIndex.has(correlation_id)) {
         const existingId = correlationIndex.get(correlation_id)!;
@@ -78,32 +126,34 @@ export function submitRequest(payload: any): QueueItem {
         correlationIndex.set(correlation_id, requestId);
     }
 
-    // Trigger background processing
-    processQueue();
+    // Ensure background processing is running
+    startBackgroundProcesses();
 
     return item;
 }
 
-let isProcessing = false;
-
-async function processQueue() {
+async function processQueueLoop() {
     if (isProcessing) return;
     isProcessing = true;
 
     try {
-        // Iterate and process pending items one by one (or with limited concurrency)
-        // Since this is a "dirty" solution, sequential is fine.
-        // We need to continuously check because new items might arrive.
         while (true) {
             const pendingParams = Array.from(requestStore.values())
                 .filter(i => i.status === 'pending')
                 .sort((a, b) => a.createdAt - b.createdAt);
-            
-            if (pendingParams.length === 0) break;
-            
-            const nextItem = pendingParams[0];
-            await processItem(nextItem);
+
+            if (pendingParams.length > 0) {
+                const nextItem = pendingParams[0];
+                await processItem(nextItem);
+            } else {
+                // Sleep if empty to avoid busy-wait
+                await sleep(50);
+            }
         }
+    } catch (err) {
+        console.error("Queue loop crashed, restarting...", err);
+        isProcessing = false;
+        // Retry logic could go here, or just let next submitRequest restart it
     } finally {
         isProcessing = false;
     }
@@ -112,7 +162,7 @@ async function processQueue() {
 async function processItem(item: QueueItem) {
     item.status = 'processing';
     item.attempts += 1;
-    
+
     // Update store (not strictly necessary with object reference but good practice)
     requestStore.set(item.requestId, item);
 
@@ -120,21 +170,21 @@ async function processItem(item: QueueItem) {
         // Construct execution URL
         // Remove leading slash from path to join cleanly
         const cleanPath = (item.path || '').replace(/^\/+/, '');
-        
+
         // Handle base url logic
         let baseUrl = THETADATA_BASE_URL;
         if (!baseUrl.endsWith('/')) baseUrl += '/';
-        
+
         const fullUrl = new URL(cleanPath, baseUrl);
-        
+
         // Add query params
         if (item.queryParams) {
             Object.entries(item.queryParams).forEach(([k, v]) => {
-                 if (Array.isArray(v)) {
-                     v.forEach(subV => fullUrl.searchParams.append(k, String(subV)));
-                 } else {
-                     fullUrl.searchParams.append(k, String(v));
-                 }
+                if (Array.isArray(v)) {
+                    v.forEach(subV => fullUrl.searchParams.append(k, String(subV)));
+                } else {
+                    fullUrl.searchParams.append(k, String(v));
+                }
             });
         }
 
@@ -145,7 +195,7 @@ async function processItem(item: QueueItem) {
             headers: {
                 ...item.headers,
                 // Ensure we don't pass host header that confuses target
-                'host': undefined, 
+                'host': undefined,
             } as any,
         };
 
@@ -155,24 +205,25 @@ async function processItem(item: QueueItem) {
         }
 
         const response = await fetch(fullUrl.toString(), fetchOptions);
-        
+
         // Read response
         const respText = await response.text();
         let resultData: any = respText;
-        
+
         // Try parsing JSON
         try {
             resultData = JSON.parse(respText);
         } catch {
             // keep as text
+            console.log('Failed to parse JSON, keeping as text');
         }
 
         item.result = resultData;
         item.resultStatusCode = response.status;
         item.status = 'completed';
         item.error = null;
-        
-        console.log(`Request ${item.requestId} completed with status ${response.status}`);
+
+        console.log(`Request ${item.requestId} completed with status ${response.status}. Data: ${JSON.stringify(resultData)}`);
 
     } catch (e: any) {
         console.error(`Request ${item.requestId} failed:`, e);
