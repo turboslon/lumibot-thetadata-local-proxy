@@ -4,6 +4,7 @@ import type { RequestHandler } from '../handlers/types';
 import { TerminalStatusCheckHandler } from '../handlers/terminal/TerminalStatusCheckHandler';
 import { TerminalShutdownHandler } from '../handlers/terminal/TerminalShutdownHandler';
 import { StockHistoryQuoteHandler } from '../handlers/stock/StockHistoryQuoteHandler';
+import { StockHistoryOhlcHandler } from '../handlers/stock/StockHistoryOhlcHandler';
 // TODO: Import other handlers as they are implemented
 
 export class RequestHandlerFactory {
@@ -18,6 +19,7 @@ export class RequestHandlerFactory {
 
             // Stock
             new StockHistoryQuoteHandler(baseUrl),
+            new StockHistoryOhlcHandler(baseUrl),
 
             // TODO: Add other handlers here
         ];
