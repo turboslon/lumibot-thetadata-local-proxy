@@ -1051,6 +1051,54 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Note**: The legacy path is provided as a fallback for older terminal versions.
 
+**Request Example**:
+```json
+{
+  // No query parameters or body required
+}
+```
+
+**Response Format**:
+```json
+{
+  // Response body is not examined; success is determined by HTTP status code
+}
+```
+
+**Response Fields**:
+- HTTP status code determines success:
+  - `200-499`: Shutdown request accepted, terminal will stop gracefully
+  - `500+`: Server error, try next path in fallback list
+
+**Expected Behavior**:
+- HTTP 200-499 → Terminal shutdown initiated successfully
+- HTTP 500+ → Server error, try legacy fallback path
+- Network error → Try next path in fallback list
+- Returns `True` if any path succeeds with status < 500, `False` otherwise
+
+**Implementation Notes**:
+```javascript
+// From _request_terminal_shutdown() in thetadata_helper.py:
+const shutdown_paths = [
+  "/v3/terminal/shutdown",
+  "/v3/system/terminal/shutdown"  // legacy fallback
+];
+
+for (const path of shutdown_paths) {
+  const shutdown_url = `${_current_base_url()}${path}`;
+  try {
+    const resp = await fetch(shutdown_url, { timeout: 1000 });
+    const status_code = resp.status;
+    if (status_code < 500) {
+      return true;  // Shutdown accepted
+    }
+  } catch (error) {
+    continue;  // Try next path
+  }
+}
+return false;  // All paths failed
+```
+
 ---
 
 ## Request Flow
