@@ -760,6 +760,49 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Note**: This is a V2 endpoint - dividends/splits are only available on the legacy v2 REST surface.
 
+**Request Example**:
+```json
+{
+  "root": "AAPL",           // Stock symbol
+  "start_date": "20240101",  // Start date: YYYYMMDD
+  "end_date": "20241231",    // End date: YYYYMMDD
+  "use_csv": "false",         // Response format: false for JSON
+  "pretty_time": "false"       // Time formatting: false for raw timestamps
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "amount", "record_date", "pay_date", "declared_date", "frequency"]
+  },
+  "response": [
+    [20240115, 0.24, 20240115, 20240215, "Q"],
+    [20240415, 0.25, 20240415, 20240515, "Q"],
+    [20240715, 0.26, 20240715, 20240815, "Q"],
+    [20241015, 0.27, 20241015, 20241115, "Q"]
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `amount` (number): Dividend amount per share
+- `record_date` (string): Record date in `YYYYMMDD` format
+- `pay_date` (string): Payment date in `YYYYMMDD` format
+- `declared_date` (string): Declaration date in `YYYYMMDD` format
+- `frequency` (string): Dividend frequency (e.g., "Q" for quarterly)
+
+**Expected Behavior**:
+- HTTP 200 → Returns dividend history for requested date range
+- HTTP 472 → No data available for this symbol/date range
+- HTTP 404/410 → Invalid symbol or parameters
+
 ---
 
 ### Stock Splits
@@ -786,6 +829,49 @@ This document describes all request types that the `QueueClient` can issue to th
 **Usage**: Called by `_download_corporate_events()` for split data. Used for corporate action normalization and option strike reverse-split adjustments.
 
 **Note**: This is a V2 endpoint - dividends/splits are only available on the legacy v2 REST surface.
+
+**Request Example**:
+```json
+{
+  "root": "AAPL",           // Stock symbol
+  "start_date": "20200101",  // Start date: YYYYMMDD
+  "end_date": "20241231",    // End date: YYYYMMDD
+  "use_csv": "false",         // Response format: false for JSON
+  "pretty_time": "false"       // Time formatting: false for raw timestamps
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["ms_of_day", "split_date", "before_shares", "after_shares", "date"]
+  },
+  "response": [
+    [37800000, 20200618, 1, 4, 20200618],
+    [37800000, 20220831, 4, 1, 20220831],
+    [37800000, 20240831, 20, 1, 20240831]
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `ms_of_day` (number): Milliseconds since midnight
+- `split_date` (string): Split date in `YYYYMMDD` format
+- `before_shares` (number): Number of shares before split
+- `after_shares` (number): Number of shares after split
+- `date` (string): Trading date in `YYYYMMDD` format
+
+**Expected Behavior**:
+- HTTP 200 → Returns split history for requested date range
+- HTTP 472 → No data available for this symbol/date range
+- HTTP 404/410 → Invalid symbol or parameters
+
+**Note**: ThetaData V2 returns a row for EVERY trading day with "most recent" split info. The response must be filtered to only actual split events where `date == split_date`.
 
 ---
 
