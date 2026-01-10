@@ -1,0 +1,107 @@
+{
+  "timestamp": "2026-01-10T20:15:30.500Z",
+  "request": {
+    "url": "http://127.0.0.1:25503/v3/stock/history/quote?symbol=AAPL&date=20240105&interval=1h&format=json",
+    "method": "GET",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "queryParams": {
+      "symbol": "AAPL",
+      "date": "20240105",
+      "interval": "1h",
+      "format": "json"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-length": "1152",
+      "content-type": "application/json",
+      "date": "Sat, 10 Jan 2026 20:15:30 GMT",
+      "server": "Jetty(12.0.14)"
+    },
+    "body": {
+      "response": [
+        {
+          "ask_size": 6,
+          "bid_size": 17,
+          "ask_exchange": 1,
+          "ask_condition": 0,
+          "bid_exchange": 7,
+          "ask": 181.94,
+          "bid": 181.92,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T09:30:00"
+        },
+        {
+          "ask_size": 3,
+          "bid_size": 3,
+          "ask_exchange": 1,
+          "ask_condition": 0,
+          "bid_exchange": 65,
+          "ask": 182.07,
+          "bid": 182.06,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T10:30:00"
+        },
+        {
+          "ask_size": 9,
+          "bid_size": 8,
+          "ask_exchange": 1,
+          "ask_condition": 0,
+          "bid_exchange": 43,
+          "ask": 182.09,
+          "bid": 182.08,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T11:30:00"
+        },
+        {
+          "ask_size": 3,
+          "bid_size": 6,
+          "ask_exchange": 7,
+          "ask_condition": 0,
+          "bid_exchange": 1,
+          "ask": 181.37,
+          "bid": 181.36,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T12:30:00"
+        },
+        {
+          "ask_size": 3,
+          "bid_size": 4,
+          "ask_exchange": 1,
+          "ask_condition": 0,
+          "bid_exchange": 1,
+          "ask": 181.75,
+          "bid": 181.74,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T13:30:00"
+        },
+        {
+          "ask_size": 5,
+          "bid_size": 5,
+          "ask_exchange": 1,
+          "ask_condition": 0,
+          "bid_exchange": 3,
+          "ask": 181.13,
+          "bid": 181.11,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T14:30:00"
+        },
+        {
+          "ask_size": 9,
+          "bid_size": 2,
+          "ask_exchange": 3,
+          "ask_condition": 0,
+          "bid_exchange": 1,
+          "ask": 180.28,
+          "bid": 180.27,
+          "bid_condition": 0,
+          "timestamp": "2024-01-05T15:30:00"
+        }
+      ]
+    },
+    "rawText": "{\n\t\"response\": [\n\t\t{\"ask_size\":6,\"bid_size\":17,\"ask_exchange\":1,\"ask_condition\":0,\"bid_exchange\":7,\"ask\":181.94,\"bid\":181.92,\"bid_condition\":0,\"timestamp\":\"2024-01-05T09:30:00\"},\n\t\t{\"ask_size\":3,\"bid_size\":3,\"ask_exchange\":1,\"ask_condition\":0,\"bid_exchange\":65,\"ask\":182.07,\"bid\":182.06,\"bid_condition\":0,\"timestamp\":\"2024-01-05T10:30:00\"},\n\t\t{\"ask_size\":9,\"bid_size\":8,\"ask_exchange\":1,\"ask_condition\":0,\"bid_exchange\":43,\"ask\":182.09,\"bid\":182.08,\"bid_condition\":0,\"timestamp\":\"2024-01-05T11:30:00\"},\n\t\t{\"ask_size\":3,\"bid_size\":6,\"ask_exchange\":7,\"ask_condition\":0,\"bid_exchange\":1,\"ask\":181.37,\"bid\":181.36,\"bid_condition\":0,\"timestamp\":\"2024-01-05T12:30:00\"},\n\t\t{\"ask_size\":3,\"bid_size\":4,\"ask_exchange\":1,\"ask_condition\":0,\"bid_exchange\":1,\"ask\":181.75,\"bid\":181.74,\"bid_condition\":0,\"timestamp\":\"2024-01-05T13:30:00\"},\n\t\t{\"ask_size\":5,\"bid_size\":5,\"ask_exchange\":1,\"ask_condition\":0,\"bid_exchange\":3,\"ask\":181.13,\"bid\":181.11,\"bid_condition\":0,\"timestamp\":\"2024-01-05T14:30:00\"},\n\t\t{\"ask_size\":9,\"bid_size\":2,\"ask_exchange\":3,\"ask_condition\":0,\"bid_exchange\":1,\"ask\":180.28,\"bid\":180.27,\"bid_condition\":0,\"timestamp\":\"2024-01-05T15:30:00\"}\n\t]\n}\n\n"
+  }
+}
