@@ -558,6 +558,51 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Usage**: Called by `get_historical_data()` for intraday index price data.
 
+**Request Example**:
+```json
+{
+  "root": "SPX",            // Index symbol
+  "start": "20240101",       // Start date: YYYYMMDD
+  "end": "20240105",         // End date: YYYYMMDD
+  "ivl": "5m",             // Interval: 1m, 5m, 10m, 15m, 30m, 1h, 1d
+  "start_time": "09:30:00",  // Optional: Start time HH:MM:SS
+  "end_time": "16:00:00"    // Optional: End time HH:MM:SS
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "ms_of_day", "open", "high", "low", "close", "volume", "count"]
+  },
+  "response": [
+    [20240101, 37800000, 4785.50, 4790.25, 4780.00, 4788.75, 125000000, 150],
+    [20240101, 37900000, 4788.75, 4795.00, 4785.50, 4792.50, 128000000, 200],
+    ...
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `ms_of_day` (number): Milliseconds since midnight
+- `open` (number): Opening price
+- `high` (number): Highest price during interval
+- `low` (number): Lowest price during interval
+- `close` (number): Closing price
+- `volume` (number): Trading volume (notional for indices)
+- `count` (number): Number of trades
+
+**Expected Behavior**:
+- HTTP 200 → Returns OHLC data for requested date range
+- HTTP 472 → No data available for this symbol/date range
+- HTTP 404/410 → Invalid symbol or parameters
+
 ---
 
 ### Index History - Price (Intraday)
@@ -581,6 +626,46 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Usage**: Called by `get_historical_data()` for intraday index price data.
 
+**Request Example**:
+```json
+{
+  "root": "SPX",            // Index symbol
+  "start": "20240101",       // Start date: YYYYMMDD
+  "end": "20240105",         // End date: YYYYMMDD
+  "ivl": "5m",             // Interval: 1m, 5m, 10m, 15m, 30m, 1h, 1d
+  "start_time": "09:30:00",  // Optional: Start time HH:MM:SS
+  "end_time": "16:00:00"    // Optional: End time HH:MM:SS
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "ms_of_day", "price"]
+  },
+  "response": [
+    [20240101, 37800000, 4788.75],
+    [20240101, 37900000, 4792.50],
+    ...
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `ms_of_day` (number): Milliseconds since midnight
+- `price` (number): Index price at the interval
+
+**Expected Behavior**:
+- HTTP 200 → Returns price data for requested date range
+- HTTP 472 → No data available for this symbol/date range
+- HTTP 404/410 → Invalid symbol or parameters
+
 ---
 
 ### Index History - EOD (End of Day)
@@ -601,6 +686,48 @@ This document describes all request types that the `QueueClient` can issue to th
 - `EOD_ENDPOINTS["index"] = "/v3/index/history/eod"`
 
 **Usage**: Called by `get_historical_eod_data()` for daily index bars.
+
+**Request Example**:
+```json
+{
+  "root": "SPX",            // Index symbol
+  "start": "20240101",       // Start date: YYYYMMDD
+  "end": "20240105",         // End date: YYYYMMDD
+  "adjust": "splits"          // Optional: Price adjustment type
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "open", "high", "low", "close", "volume", "count"]
+  },
+  "response": [
+    [20240101, 4780.00, 4795.00, 4775.00, 4790.00, 1250000000, 1500],
+    [20240102, 4790.00, 4805.00, 4785.00, 4800.00, 1280000000, 2000],
+    ...
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `open` (number): Opening price
+- `high` (number): Highest price during the day
+- `low` (number): Lowest price during the day
+- `close` (number): Official closing price
+- `volume` (number): Trading volume (notional for indices)
+- `count` (number): Number of trades
+
+**Expected Behavior**:
+- HTTP 200 → Returns daily OHLC data with official closing prices
+- HTTP 472 → No data available for this symbol/date range
+- HTTP 404/410 → Invalid symbol or parameters
 
 ---
 
