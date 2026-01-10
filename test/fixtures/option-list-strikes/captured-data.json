@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-01-10T20:28:27.268Z",
+  "request": {
+    "url": "http://127.0.0.1:25503/v3/option/list/strikes?symbol=AAPL&exp=20250221&format=json",
+    "method": "GET",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "queryParams": {
+      "symbol": "AAPL",
+      "exp": "20250221",
+      "format": "json"
+    }
+  },
+  "response": {
+    "status": 410,
+    "headers": {
+      "content-length": "198",
+      "content-type": "text/plain",
+      "date": "Sat, 10 Jan 2026 20:28:27 GMT",
+      "server": "Jetty(12.0.14)"
+    },
+    "body": "We have upgraded to API v3. Please use API v3 query parameters instead. \nDeprecated query parameters:\n\texp -> expiration\nConsult API v3 documentation for more information: https://docs.thetadata.us/",
+    "rawText": "We have upgraded to API v3. Please use API v3 query parameters instead. \nDeprecated query parameters:\n\texp -> expiration\nConsult API v3 documentation for more information: https://docs.thetadata.us/"
+  }
+}
