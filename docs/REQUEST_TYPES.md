@@ -894,6 +894,38 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Usage**: Called by `_fetch_expiration_values()` to get available expiration dates for building option chains.
 
+**Request Example**:
+```json
+{
+  "symbol": "AAPL",  // Option root symbol
+  "format": "json"      // Optional: Response format (default: "json")
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["expirations"]
+  },
+  "response": [
+    ["20250117", "20250124", "20250131", "20250207", ...]
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `expirations` (string): Expiration date in `YYYYMMDD` format
+
+**Expected Behavior**:
+- HTTP 200 → Returns list of available expiration dates for the symbol
+- HTTP 472 → No data available for this symbol
+- HTTP 404/410 → Invalid symbol or parameters
+
 ---
 
 ### Option List - Strikes
@@ -914,6 +946,39 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Usage**: Called by option chain building functions to get available strike prices.
 
+**Request Example**:
+```json
+{
+  "symbol": "AAPL",  // Option root symbol
+  "exp": "20250117",    // Expiration date: YYYYMMDD
+  "format": "json"      // Optional: Response format (default: "json")
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["strikes"]
+  },
+  "response": [
+    [140, 142.5, 145, 147.5, 150, 152.5, 155, 157.5, 160, ...]
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `strikes` (number): Strike price (decimal)
+
+**Expected Behavior**:
+- HTTP 200 → Returns list of available strike prices for the symbol and expiration
+- HTTP 472 → No data available for this symbol/expiration combination
+- HTTP 404/410 → Invalid symbol, expiration, or parameters
+
 ---
 
 ### Option List - Dates Quote
@@ -932,6 +997,38 @@ This document describes all request types that the `QueueClient` can issue to th
 - `OPTION_LIST_ENDPOINTS["dates_quote"] = "/v3/option/list/dates/quote"`
 
 **Usage**: Called to determine which dates have quote data available for options.
+
+**Request Example**:
+```json
+{
+  "symbol": "AAPL",  // Option root symbol
+  "format": "json"      // Optional: Response format (default: "json")
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["dates"]
+  },
+  "response": [
+    ["20240102", "20240103", "20240104", "20240105", ...]
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `dates` (string): Trading date in `YYYYMMDD` format when quote data is available
+
+**Expected Behavior**:
+- HTTP 200 → Returns list of dates with available quote data for the symbol
+- HTTP 472 → No data available for this symbol
+- HTTP 404/410 → Invalid symbol or parameters
 
 ---
 
