@@ -341,6 +341,54 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Usage**: Called by `get_historical_data()` for intraday option price data.
 
+**Request Example**:
+```json
+{
+  "root": "AAPL",           // Option root symbol
+  "exp": "20250117",        // Expiration date: YYYYMMDD
+  "strike": "150",          // Strike price (decimal string)
+  "right": "C",             // Option right: "C" for Call, "P" for Put
+  "start": "20240101",      // Start date: YYYYMMDD
+  "end": "20240105",        // End date: YYYYMMDD
+  "ivl": "5m",              // Interval: 1m, 5m, 10m, 15m, 30m, 1h, 1d
+  "start_time": "09:30:00", // Optional: Start time HH:MM:SS
+  "end_time": "16:00:00"    // Optional: End time HH:MM:SS
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "ms_of_day", "open", "high", "low", "close", "volume", "count"]
+  },
+  "response": [
+    [20240101, 37800000, 5.25, 5.50, 5.20, 5.45, 1250, 150],
+    [20240101, 37900000, 5.45, 5.60, 5.40, 5.55, 1280, 200],
+    ...
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `ms_of_day` (number): Milliseconds since midnight
+- `open` (number): Opening price
+- `high` (number): Highest price during interval
+- `low` (number): Lowest price during interval
+- `close` (number): Closing price
+- `volume` (number): Trading volume
+- `count` (number): Number of trades
+
+**Expected Behavior**:
+- HTTP 200 → Returns OHLC data for requested option contract
+- HTTP 472 → No data available for this contract/date range
+- HTTP 404/410 → Invalid symbol, parameters, or contract not found
+
 ---
 
 ### Option History - Quote (Intraday)
@@ -367,6 +415,52 @@ This document describes all request types that the `QueueClient` can issue to th
 
 **Usage**: Called by `get_historical_data()` for intraday option quote data (bid/ask).
 
+**Request Example**:
+```json
+{
+  "root": "AAPL",           // Option root symbol
+  "exp": "20250117",        // Expiration date: YYYYMMDD
+  "strike": "150",          // Strike price (decimal string)
+  "right": "C",             // Option right: "C" for Call, "P" for Put
+  "start": "20240101",      // Start date: YYYYMMDD
+  "end": "20240105",        // End date: YYYYMMDD
+  "ivl": "5m",              // Interval: 1m, 5m, 10m, 15m, 30m, 1h, 1d
+  "start_time": "09:30:00", // Optional: Start time HH:MM:SS
+  "end_time": "16:00:00"    // Optional: End time HH:MM:SS
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "ms_of_day", "bid", "ask", "bid_size", "ask_size"]
+  },
+  "response": [
+    [20240101, 37800000, 5.20, 5.25, 50, 25],
+    [20240101, 37900000, 5.25, 5.30, 75, 30],
+    ...
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `ms_of_day` (number): Milliseconds since midnight
+- `bid` (number): Best bid price
+- `ask` (number): Best ask price
+- `bid_size` (number): Bid size (number of contracts)
+- `ask_size` (number): Ask size (number of contracts)
+
+**Expected Behavior**:
+- HTTP 200 → Returns NBBO quote data for requested option contract
+- HTTP 472 → No data available for this contract/date range
+- HTTP 404/410 → Invalid symbol, parameters, or contract not found
+
 ---
 
 ### Option History - EOD (End of Day)
@@ -391,6 +485,52 @@ This document describes all request types that the `QueueClient` can issue to th
 - `EOD_ENDPOINTS["option"] = "/v3/option/history/eod"`
 
 **Usage**: Called by `get_historical_eod_data()` for daily option bars. Used for day-cadence backtests.
+
+**Request Example**:
+```json
+{
+  "root": "AAPL",           // Option root symbol
+  "exp": "20250117",        // Expiration date: YYYYMMDD
+  "strike": "150",          // Strike price (decimal string)
+  "right": "C",             // Option right: "C" for Call, "P" for Put
+  "start": "20240101",      // Start date: YYYYMMDD
+  "end": "20240105",        // End date: YYYYMMDD
+  "adjust": "splits",       // Optional: Price adjustment type
+  "include_nbbo": true      // Optional: Include NBBO quote columns
+}
+```
+
+**Response Format**:
+```json
+{
+  "header": {
+    "format": ["date", "open", "high", "low", "close", "volume", "count"]
+  },
+  "response": [
+    [20240101, 5.20, 5.50, 5.15, 5.45, 1250, 150],
+    [20240102, 5.45, 5.60, 5.40, 5.55, 1280, 200],
+    ...
+  ]
+}
+```
+
+**Response Fields**:
+- `header.format` (array of strings): Column names in the response
+- `response` (array of arrays): Array of data rows, each containing values for all columns in `format`
+
+**Column Descriptions**:
+- `date` (string): Trading date in `YYYYMMDD` format
+- `open` (number): Opening price
+- `high` (number): Highest price during the day
+- `low` (number): Lowest price during the day
+- `close` (number): Official closing price (includes auction)
+- `volume` (number): Trading volume
+- `count` (number): Number of trades
+
+**Expected Behavior**:
+- HTTP 200 → Returns daily OHLC data with official closing prices
+- HTTP 472 → No data available for this contract/date range
+- HTTP 404/410 → Invalid symbol, parameters, or contract not found
 
 ---
 
