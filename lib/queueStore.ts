@@ -37,6 +37,8 @@ function getEnvVar(key: string): string {
 // Ensure trailing slash is handled or not duplicated
 const THETADATA_BASE_URL = getEnvVar('THETADATA_BASE_URL');
 
+import { RequestHandlerFactory } from './factory/RequestHandlerFactory';
+
 export function getStats() {
     const values = Array.from(requestStore.values());
     return {
@@ -167,12 +169,46 @@ async function processItem(item: QueueItem) {
     requestStore.set(item.requestId, item);
 
     try {
+        // Try to find a specialized handler
+        // Handle base url logic for factory (could be moved out to init if static)
+        let baseUrl = THETADATA_BASE_URL;
+        // Strip trailing slash if present to avoid double slashes when joining
+        if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+
+        // Initialize factory (lazy or cached would be better but this is fine for now)
+        // In a real app we'd init this once at module level
+        const handlerFactory = new RequestHandlerFactory(baseUrl);
+        const handler = handlerFactory.getHandler(item.path);
+
+        if (handler) {
+            console.log(`Using handler: ${handler.handlerId} for path: ${item.path}`);
+
+            const result = await handler.execute({
+                method: item.method,
+                path: item.path,
+                queryParams: item.queryParams,
+                headers: item.headers,
+                body: item.body
+            });
+
+            item.result = result.body;
+            item.resultStatusCode = result.statusCode;
+            item.status = result.error ? 'failed' : 'completed';
+            item.error = result.error || null;
+
+            if (item.status === 'completed') {
+                console.log(`Request ${item.requestId} completed via handler ${handler.handlerId} with status ${item.resultStatusCode}.`);
+            } else {
+                console.error(`Request ${item.requestId} failed via handler ${handler.handlerId}: ${item.error}`);
+            }
+            return;
+        }
+
         // Construct execution URL
         // Remove leading slash from path to join cleanly
         const cleanPath = (item.path || '').replace(/^\/+/, '');
 
         // Handle base url logic
-        let baseUrl = THETADATA_BASE_URL;
         if (!baseUrl.endsWith('/')) baseUrl += '/';
 
         const fullUrl = new URL(cleanPath, baseUrl);
