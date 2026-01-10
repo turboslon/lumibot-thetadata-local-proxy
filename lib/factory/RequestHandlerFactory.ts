@@ -2,6 +2,7 @@ import type { RequestHandler } from '../handlers/types';
 
 // Import all handlers
 import { TerminalStatusCheckHandler } from '../handlers/terminal/TerminalStatusCheckHandler';
+import { TerminalShutdownHandler } from '../handlers/terminal/TerminalShutdownHandler';
 // TODO: Import other handlers as they are implemented
 
 export class RequestHandlerFactory {
@@ -12,6 +13,7 @@ export class RequestHandlerFactory {
         this.handlers = [
             // Terminal
             new TerminalStatusCheckHandler(baseUrl),
+            new TerminalShutdownHandler(baseUrl),
 
             // TODO: Add other handlers here
         ];
