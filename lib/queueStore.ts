@@ -82,15 +82,6 @@ function cleanupStaleRequests() {
 
 export function getRequest(requestId: string) {
     const item = requestStore.get(requestId);
-
-    // Cleanup if completed and requested (return valuable data then delete)
-    if (item && item.status === 'completed') {
-        requestStore.delete(requestId);
-        if (item.correlationId) {
-            correlationIndex.delete(item.correlationId);
-        }
-    }
-
     return item;
 }
 
