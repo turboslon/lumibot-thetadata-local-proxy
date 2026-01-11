@@ -8,6 +8,7 @@
 
 **Query Parameters**:
 - `symbol` (string): Option root symbol (e.g., `"AAPL"`, `"SPX"`)
+- `expiration` (string): Expiration date (e.g., `"20240419"`)
 - `format` (string, optional): Response format. Default: `"json"`
 
 **Pre-defined Constants**:
@@ -18,8 +19,9 @@
 **Request Example**:
 ```json
 {
-  "symbol": "AAPL",  // Option root symbol
-  "format": "json"      // Optional: Response format (default: "json")
+  "symbol": "AAPL",
+  "expiration": "20240419",
+  "format": "json"
 }
 ```
 
