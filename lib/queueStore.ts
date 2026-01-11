@@ -168,8 +168,13 @@ async function processItem(item: QueueItem) {
 
         // Initialize factory (lazy or cached would be better but this is fine for now)
         // In a real app we'd init this once at module level
+        // Initialize factory (lazy or cached would be better but this is fine for now)
+        // In a real app we'd init this once at module level
         const handlerFactory = new RequestHandlerFactory(baseUrl);
-        const handler = handlerFactory.getHandler(item.path);
+
+        // Sanitize path for matching (remove query params)
+        const matchPath = (item.path || '').split('?')[0];
+        const handler = handlerFactory.getHandler(matchPath);
 
         if (handler) {
             console.log(`Using handler: ${handler.handlerId} for path: ${item.path}`);

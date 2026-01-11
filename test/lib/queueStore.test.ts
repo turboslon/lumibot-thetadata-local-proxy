@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach } from "bun:test";
+import { describe, expect, test, beforeEach, mock } from "bun:test";
 import { submitRequest, getRequest, getStats } from "../../lib/queueStore";
 
 describe("QueueStore", () => {
@@ -32,5 +32,51 @@ describe("QueueStore", () => {
         expect(retrieved2).toBeDefined();
         expect(retrieved2?.status).toBe("completed");
         expect(retrieved2?.result).toEqual({ success: true });
+    });
+    test("requests with query params in path should use handler", async () => {
+        // Mock fetch to verify URL and return dummy response
+        const originalFetch = global.fetch;
+        let fetchedUrl = "";
+        global.fetch = mock(async (url) => {
+            fetchedUrl = url.toString();
+            return new Response(JSON.stringify({ response: [] }), { status: 200 });
+        }) as any;
+
+        try {
+            // 1. Submit a request with a path that matches a handler BUT has query params
+            // StockHistoryEodHandler handles /v3/stock/history/eod
+            const payload = {
+                method: "GET",
+                path: "/v3/stock/history/eod?foo=bar", // Dirty path
+                headers: {},
+            };
+
+            const item = submitRequest(payload);
+
+            // Wait for processing (processQueueLoop runs in background but we need to wait a bit)
+            // sleep is not exported but we can wait for status change
+            let retries = 10;
+            while (item.status === 'pending' || item.status === 'processing') {
+                await new Promise(r => setTimeout(r, 50));
+                retries--;
+                if (retries === 0) break;
+            }
+
+            // 2. Verify handler was used
+            // If handler was used, it constructs URL from its endpoint: .../v3/stock/history/eod
+            // If proxy was used, it uses item.path: .../v3/stock/history/eod?foo=bar
+
+            // Note: Handler adds query params from item.queryParams, but here we didn't pass any in payload.queryParams
+            // However, the handler might add default params (like format=json). 
+            // StockHistoryEodHandler adds format=json.
+
+            expect(fetchedUrl).toContain("/v3/stock/history/eod");
+            expect(fetchedUrl).not.toContain("?foo=bar");
+            // The dirty part "?foo=bar" should be stripped during matching AND not used by handler construction.
+            // (Unless handler parses it from path? No, handler uses item.queryParams)
+
+        } finally {
+            global.fetch = originalFetch;
+        }
     });
 });
