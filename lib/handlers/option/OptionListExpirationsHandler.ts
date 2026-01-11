@@ -6,7 +6,7 @@ export class OptionListExpirationsHandler extends V3RequestHandler {
     readonly handlerId = 'option-list-expirations';
     readonly endpoint = 'option/list/expirations';
     readonly pathPatterns = [
-        /^\/v3\/option\/list\/expirations$/i,
+        /^\/?v3\/option\/list\/expirations$/i,
         /^option\/list\/expirations$/i
     ];
 

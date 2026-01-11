@@ -5,7 +5,7 @@ export class OptionHistoryQuoteHandler extends V3RequestHandler {
     readonly handlerId = 'option-history-quote';
     readonly endpoint = 'option/history/quote';
     readonly pathPatterns = [
-        /^\/v3\/option\/history\/quote$/i,
+        /^\/?v3\/option\/history\/quote$/i,
         /^option\/history\/quote$/i
     ];
 

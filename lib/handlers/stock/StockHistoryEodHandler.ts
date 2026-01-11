@@ -5,7 +5,7 @@ export class StockHistoryEodHandler extends V3RequestHandler {
     readonly handlerId = 'stock-history-eod';
     readonly endpoint = 'stock/history/eod';
     readonly pathPatterns = [
-        /^\/v3\/stock\/history\/eod$/i,
+        /^\/?v3\/stock\/history\/eod$/i,
         /^stock\/history\/eod$/i
     ];
 

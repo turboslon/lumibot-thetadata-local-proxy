@@ -5,7 +5,7 @@ export class OptionListDatesQuoteHandler extends V3RequestHandler {
     readonly handlerId = 'option-list-dates-quote';
     readonly endpoint = 'option/list/dates/quote';
     readonly pathPatterns = [
-        /^\/v3\/option\/list\/dates\/quote$/i,
+        /^\/?v3\/option\/list\/dates\/quote$/i,
         /^option\/list\/dates\/quote$/i
     ];
 

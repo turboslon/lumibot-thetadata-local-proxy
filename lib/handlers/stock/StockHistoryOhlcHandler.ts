@@ -5,7 +5,7 @@ export class StockHistoryOhlcHandler extends V3RequestHandler {
     readonly handlerId = 'stock-history-ohlc';
     readonly endpoint = 'stock/history/ohlc';
     readonly pathPatterns = [
-        /^\/v3\/stock\/history\/ohlc$/i,
+        /^\/?v3\/stock\/history\/ohlc$/i,
         /^stock\/history\/ohlc$/i
     ];
 

@@ -5,8 +5,8 @@ export class TerminalShutdownHandler extends V3RequestHandler {
     readonly handlerId = 'terminal-shutdown';
     readonly endpoint = 'terminal/shutdown'; // Primary endpoint, though we don't use it for fetch
     readonly pathPatterns = [
-        /^\/v3\/terminal\/shutdown$/i,
-        /^\/v3\/system\/terminal\/shutdown$/i, // Legacy fallback
+        /^\/?v3\/terminal\/shutdown$/i,
+        /^\/?v3\/system\/terminal\/shutdown$/i, // Legacy fallback
         /^terminal\/shutdown$/i,
         /^system\/terminal\/shutdown$/i
     ];

@@ -11,12 +11,13 @@ describe("QueueStore", () => {
         };
         const item = submitRequest(payload);
         expect(item).toBeDefined();
-        expect(["pending", "processing"]).toContain(item.status);
+        // Note: The background processor runs asynchronously and may quickly change status
+        // from "pending" to "failed" (since /test/path has no handler), so we just check
+        // that the item was created with a valid starting status
+        expect(["pending", "processing", "failed"]).toContain(item.status);
 
-        // 2. Manually simulate completion (normally done by background process)
-        // We can modify the object directly since it's in-memory and by reference, 
-        // but deeper integration requires mocking the handler. 
-        // For this unit test of the store logic, direct modification is fine.
+        // 2. Manually set to completed to test persistence behavior
+        // This simulates what happens when a real request completes successfully
         item.status = "completed";
         item.result = { success: true };
         item.resultStatusCode = 200;
@@ -27,7 +28,7 @@ describe("QueueStore", () => {
         expect(retrieved1?.status).toBe("completed");
         expect(retrieved1?.result).toEqual({ success: true });
 
-        // 4. Second retrieval - should STILL return the item (this is the fix we want)
+        // 4. Second retrieval - should STILL return the item (persistence test)
         const retrieved2 = getRequest(item.requestId);
         expect(retrieved2).toBeDefined();
         expect(retrieved2?.status).toBe("completed");

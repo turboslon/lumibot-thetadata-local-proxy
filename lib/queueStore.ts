@@ -160,20 +160,22 @@ async function processItem(item: QueueItem) {
     requestStore.set(item.requestId, item);
 
     try {
-        // Try to find a specialized handler
-        // Handle base url logic for factory (could be moved out to init if static)
+        // Handle base url logic for factory
         let baseUrl = THETADATA_BASE_URL;
         // Strip trailing slash if present to avoid double slashes when joining
         if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
 
-        // Initialize factory (lazy or cached would be better but this is fine for now)
-        // In a real app we'd init this once at module level
-        // Initialize factory (lazy or cached would be better but this is fine for now)
-        // In a real app we'd init this once at module level
         const handlerFactory = new RequestHandlerFactory(baseUrl);
 
-        // Sanitize path for matching (remove query params)
-        const matchPath = (item.path || '').split('?')[0];
+        // Normalize path for matching:
+        // 1. Remove query params
+        // 2. Trim whitespace
+        // 3. Remove trailing slashes (unless root path)
+        let matchPath = (item.path || '').split('?')[0].trim();
+        if (matchPath.length > 1 && matchPath.endsWith('/')) {
+            matchPath = matchPath.replace(/\/+$/, '');
+        }
+
         const handler = handlerFactory.getHandler(matchPath);
 
         if (handler) {
@@ -193,69 +195,30 @@ async function processItem(item: QueueItem) {
             item.error = result.error || null;
 
             if (item.status === 'completed') {
-                console.log(`Request ${item.requestId} completed via handler ${handler.handlerId} with status ${item.resultStatusCode}.`);
+                console.log("===")
+                console.log(`Request ${item.requestId} completed via handler ${handler.handlerId} with status ${item.resultStatusCode}. Data: ${JSON.stringify(item.result)}`);
             } else {
                 console.error(`Request ${item.requestId} failed via handler ${handler.handlerId}: ${item.error}`);
             }
             return;
         }
 
-        // Construct execution URL
-        // Remove leading slash from path to join cleanly
-        const cleanPath = (item.path || '').replace(/^\/+/, '');
+        // No handler found - HARD FAIL instead of proxying
+        const registeredHandlers = handlerFactory.getRegisteredHandlers();
+        console.error(`=== NO HANDLER FOUND ===`);
+        console.error(`Request ID: ${item.requestId}`);
+        console.error(`Method: ${item.method}`);
+        console.error(`Path: ${item.path}`);
+        console.error(`Normalized Match Path: ${matchPath}`);
+        console.error(`Query Params: ${JSON.stringify(item.queryParams)}`);
+        console.error(`Headers: ${JSON.stringify(item.headers)}`);
+        console.error(`Registered Handlers: ${registeredHandlers.join(', ')}`);
+        console.error(`=========================`);
 
-        // Handle base url logic
-        if (!baseUrl.endsWith('/')) baseUrl += '/';
-
-        const fullUrl = new URL(cleanPath, baseUrl);
-
-        // Add query params
-        if (item.queryParams) {
-            Object.entries(item.queryParams).forEach(([k, v]) => {
-                if (Array.isArray(v)) {
-                    v.forEach(subV => fullUrl.searchParams.append(k, String(subV)));
-                } else {
-                    fullUrl.searchParams.append(k, String(v));
-                }
-            });
-        }
-
-        console.log(`Proxying request ${item.requestId} to ${fullUrl.toString()}`);
-
-        const fetchOptions: RequestInit = {
-            method: item.method,
-            headers: {
-                ...item.headers,
-                // Ensure we don't pass host header that confuses target
-                'host': undefined,
-            } as any,
-        };
-
-        if (item.body) {
-            const buffer = Buffer.from(item.body, 'base64');
-            fetchOptions.body = buffer;
-        }
-
-        const response = await fetch(fullUrl.toString(), fetchOptions);
-
-        // Read response
-        const respText = await response.text();
-        let resultData: any = respText;
-
-        // Try parsing JSON
-        try {
-            resultData = JSON.parse(respText);
-        } catch {
-            // keep as text
-            console.log('Failed to parse JSON, keeping as text');
-        }
-
-        item.result = resultData;
-        item.resultStatusCode = response.status;
-        item.status = 'completed';
-        item.error = null;
-
-        console.log(`Request ${item.requestId} completed with status ${response.status}. Data: ${JSON.stringify(resultData)}`);
+        item.error = `No handler found for path: ${item.path} (normalized: ${matchPath}). Registered handlers: ${registeredHandlers.join(', ')}`;
+        item.status = 'failed';
+        item.resultStatusCode = 500;
+        item.result = null;
 
     } catch (e: any) {
         console.error(`Request ${item.requestId} failed:`, e);

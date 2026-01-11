@@ -6,7 +6,7 @@ export class OptionHistoryOhlcHandler extends V3RequestHandler {
     readonly handlerId = 'option-history-ohlc';
     readonly endpoint = 'option/history/ohlc';
     readonly pathPatterns = [
-        /^\/v3\/option\/history\/ohlc$/i,
+        /^\/?v3\/option\/history\/ohlc$/i,
         /^option\/history\/ohlc$/i
     ];
 

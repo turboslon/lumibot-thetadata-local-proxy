@@ -5,7 +5,7 @@ export class StockHistoryQuoteHandler extends V3RequestHandler {
     readonly handlerId = 'stock-history-quote';
     readonly endpoint = 'stock/history/quote';
     readonly pathPatterns = [
-        /^\/v3\/stock\/history\/quote$/i,
+        /^\/?v3\/stock\/history\/quote$/i,
         /^stock\/history\/quote$/i
     ];
 

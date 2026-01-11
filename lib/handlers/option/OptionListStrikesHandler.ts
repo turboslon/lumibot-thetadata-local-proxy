@@ -5,7 +5,7 @@ export class OptionListStrikesHandler extends V3RequestHandler {
     readonly handlerId = 'option-list-strikes';
     readonly endpoint = 'option/list/strikes';
     readonly pathPatterns = [
-        /^\/v3\/option\/list\/strikes$/i,
+        /^\/?v3\/option\/list\/strikes$/i,
         /^option\/list\/strikes$/i
     ];
 

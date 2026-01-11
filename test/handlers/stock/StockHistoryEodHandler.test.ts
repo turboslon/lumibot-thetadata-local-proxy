@@ -14,6 +14,10 @@ describe('StockHistoryEodHandler', () => {
             expect(handler.canHandle('/v3/stock/history/eod')).toBe(true);
         });
 
+        it('should match V3 path without leading slash', () => {
+            expect(handler.canHandle('v3/stock/history/eod')).toBe(true);
+        });
+
         it('should match path without version prefix', () => {
             expect(handler.canHandle('stock/history/eod')).toBe(true);
         });

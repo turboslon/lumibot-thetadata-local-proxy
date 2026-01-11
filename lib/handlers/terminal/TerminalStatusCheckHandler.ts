@@ -5,7 +5,7 @@ export class TerminalStatusCheckHandler extends V3RequestHandler {
     readonly handlerId = 'terminal-status-check';
     readonly endpoint = 'terminal/mdds/status';
     readonly pathPatterns = [
-        /^\/v3\/terminal\/mdds\/status$/i,
+        /^\/?v3\/terminal\/mdds\/status$/i,
         /^terminal\/mdds\/status$/i
     ];
 

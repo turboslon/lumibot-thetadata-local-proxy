@@ -5,7 +5,7 @@ export class OptionHistoryEodHandler extends V3RequestHandler {
     readonly handlerId = 'option-history-eod';
     readonly endpoint = 'option/history/eod';
     readonly pathPatterns = [
-        /^\/v3\/option\/history\/eod$/i,
+        /^\/?v3\/option\/history\/eod$/i,
         /^option\/history\/eod$/i
     ];
 
