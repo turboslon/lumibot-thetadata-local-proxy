@@ -195,7 +195,11 @@ async function processItem(item: QueueItem) {
             item.error = result.error || null;
 
             if (item.status === 'completed') {
-                // HTTP 200 - no logging
+                // HTTP 200 - log only if LOGGING_DISPLAY_200=true
+                if (item.resultStatusCode === 200 && process.env.LOGGING_DISPLAY_200 === 'true') {
+                    console.log("===")
+                    console.log(`Request ${item.requestId} completed via handler ${handler.handlerId} with status ${item.resultStatusCode}. Data: ${JSON.stringify(item.result)}`);
+                }
                 // HTTP 204 - log only if LOGGING_DISPLAY_204=true
                 if (item.resultStatusCode === 204 && process.env.LOGGING_DISPLAY_204 === 'true') {
                     console.log("===")
