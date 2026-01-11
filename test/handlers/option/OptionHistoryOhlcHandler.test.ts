@@ -6,7 +6,7 @@ describe('OptionHistoryOhlcHandler', () => {
     let handler: OptionHistoryOhlcHandler;
 
     beforeEach(() => {
-        handler = new OptionHistoryOhlcHandler('http://localhost:25510');
+        handler = new OptionHistoryOhlcHandler('http://localhost:25503');
     });
 
     describe('canHandle', () => {

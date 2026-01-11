@@ -168,7 +168,7 @@ Create TypeScript scripts that call ThetaData Terminal directly and store raw re
 import fs from 'fs';
 import path from 'path';
 
-const THETADATA_BASE_URL = process.env.THETADATA_BASE_URL || 'http://127.0.0.1:25510';
+const THETADATA_BASE_URL = process.env.THETADATA_BASE_URL || 'http://127.0.0.1:25503';
 
 interface CapturedData {
   timestamp: string;
@@ -770,7 +770,7 @@ describe('StockHistoryOhlcHandler', () => {
   let handler: StockHistoryOhlcHandler;
   
   beforeEach(() => {
-    handler = new StockHistoryOhlcHandler('http://localhost:25510');
+    handler = new StockHistoryOhlcHandler('http://localhost:25503');
   });
   
   describe('canHandle', () => {
@@ -855,7 +855,7 @@ describe('StockDividendsHandler', () => {
   let handler: StockDividendsHandler;
   
   beforeEach(() => {
-    handler = new StockDividendsHandler('http://localhost:25510');
+    handler = new StockDividendsHandler('http://localhost:25503');
   });
   
   describe('mapQueryParams', () => {
@@ -1051,7 +1051,7 @@ ThetaData returns large result sets across multiple pages. Each response include
 {
   "header": {
     "format": ["date", "ms_of_day", "open", "high", "low", "close", "volume"],
-    "next_page": "http://127.0.0.1:25510/v3/stock/history/ohlc?root=AAPL&start=20240102&end=20240105&ivl=1m&offset=10000",
+    "next_page": "http://127.0.0.1:25503/v3/stock/history/ohlc?root=AAPL&start=20240102&end=20240105&ivl=1m&offset=10000",
     "error_type": "null"
   },
   "response": [
@@ -1274,7 +1274,7 @@ describe('StockHistoryOhlcHandler Pagination', () => {
     const page1 = {
       header: {
         format: ['date', 'close'],
-        next_page: 'http://localhost:25510/v3/stock/history/ohlc?offset=100'
+        next_page: 'http://localhost:25503/v3/stock/history/ohlc?offset=100'
       },
       response: [[20240101, 182.50], [20240102, 183.00]]
     };

@@ -6,7 +6,7 @@ It allows Lumibot's `QueueClient` to function without connecting to the Lumiweal
 ## Prerequisites
 
 - [Bun](https://bun.sh/)
-- A local ThetaData Terminal running (default: `http://127.0.0.1:25510`)
+- A local ThetaData Terminal running (default: `http://127.0.0.1:25503`)
 
 ## Usage
 
@@ -35,7 +35,7 @@ It allows Lumibot's `QueueClient` to function without connecting to the Lumiweal
 You can configure the target ThetaData Terminal URL by setting the environment variable `THETADATA_BASE_URL` when running this service.
 
 ```bash
-THETADATA_BASE_URL=http://127.0.0.1:25510/v2 bun run dev
+THETADATA_BASE_URL=http://127.0.0.1:25503/v2 bun run dev
 ```
 
-(Default is `http://127.0.0.1:25510/v2`)
+(Default is `http://127.0.0.1:25503/v2`)

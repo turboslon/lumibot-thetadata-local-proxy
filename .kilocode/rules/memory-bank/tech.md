@@ -36,7 +36,7 @@ The service starts on port **8080** by default.
 ### Environment Variables
 ```bash
 # Required - Target ThetaData Terminal URL
-THETADATA_BASE_URL=http://127.0.0.1:25510/v2
+THETADATA_BASE_URL=http://127.0.0.1:25503/v2
 ```
 
 Create `.env` from `.env_template` and configure as needed.

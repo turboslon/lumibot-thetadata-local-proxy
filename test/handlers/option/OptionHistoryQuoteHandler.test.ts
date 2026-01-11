@@ -4,7 +4,7 @@ import fixtureData from '../../fixtures/option-history-quote/captured-data.json'
 
 describe('OptionHistoryQuoteHandler', () => {
     let handler: OptionHistoryQuoteHandler;
-    const baseUrl = 'http://127.0.0.1:25510';
+    const baseUrl = 'http://127.0.0.1:25503';
 
     beforeEach(() => {
         handler = new OptionHistoryQuoteHandler(baseUrl);

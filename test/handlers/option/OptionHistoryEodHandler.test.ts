@@ -4,7 +4,7 @@ import fixtureData from '../../fixtures/option-history-eod/captured-data.json';
 
 describe('OptionHistoryEodHandler', () => {
     let handler: OptionHistoryEodHandler;
-    const baseUrl = 'http://127.0.0.1:25510';
+    const baseUrl = 'http://127.0.0.1:25503';
 
     beforeEach(() => {
         handler = new OptionHistoryEodHandler(baseUrl);

@@ -9,7 +9,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const THETADATA_BASE_URL = (process.env.THETADATA_BASE_URL || 'http://127.0.0.1:25510').replace(/\/$/, '');
+const THETADATA_BASE_URL = (process.env.THETADATA_BASE_URL || 'http://127.0.0.1:25503').replace(/\/$/, '');
 
 interface CapturedData {
     timestamp: string;

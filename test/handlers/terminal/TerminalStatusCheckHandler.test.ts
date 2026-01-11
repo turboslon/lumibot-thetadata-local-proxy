@@ -4,7 +4,7 @@ import fixtureData from '../../fixtures/terminal-status-check/captured-data.json
 
 describe('TerminalStatusCheckHandler', () => {
     let handler: TerminalStatusCheckHandler;
-    const baseUrl = 'http://127.0.0.1:25510';
+    const baseUrl = 'http://127.0.0.1:25503';
 
     beforeEach(() => {
         handler = new TerminalStatusCheckHandler(baseUrl);

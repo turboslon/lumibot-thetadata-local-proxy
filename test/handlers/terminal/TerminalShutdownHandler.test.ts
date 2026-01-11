@@ -3,7 +3,7 @@ import { TerminalShutdownHandler } from '../../../lib/handlers/terminal/Terminal
 
 describe('TerminalShutdownHandler', () => {
     let handler: TerminalShutdownHandler;
-    const baseUrl = 'http://127.0.0.1:25510';
+    const baseUrl = 'http://127.0.0.1:25503';
 
     beforeEach(() => {
         handler = new TerminalShutdownHandler(baseUrl);

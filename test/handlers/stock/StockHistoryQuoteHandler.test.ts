@@ -9,7 +9,7 @@ describe('StockHistoryQuoteHandler', () => {
     let handler: StockHistoryQuoteHandler;
 
     beforeEach(() => {
-        handler = new StockHistoryQuoteHandler('http://localhost:25510');
+        handler = new StockHistoryQuoteHandler('http://localhost:25503');
         global.fetch = mock();
     });
 

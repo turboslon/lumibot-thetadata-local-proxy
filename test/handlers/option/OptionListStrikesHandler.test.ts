@@ -22,7 +22,7 @@ describe('OptionListStrikesHandler', () => {
     let handler: OptionListStrikesHandler;
 
     beforeEach(() => {
-        handler = new OptionListStrikesHandler('http://localhost:25510');
+        handler = new OptionListStrikesHandler('http://localhost:25503');
     });
 
     describe('canHandle', () => {

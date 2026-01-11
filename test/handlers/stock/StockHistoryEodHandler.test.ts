@@ -6,7 +6,7 @@ describe('StockHistoryEodHandler', () => {
     let handler: StockHistoryEodHandler;
 
     beforeEach(() => {
-        handler = new StockHistoryEodHandler('http://localhost:25510');
+        handler = new StockHistoryEodHandler('http://localhost:25503');
     });
 
     describe('canHandle', () => {
