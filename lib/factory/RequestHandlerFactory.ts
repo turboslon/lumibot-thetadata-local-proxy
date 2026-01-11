@@ -9,6 +9,7 @@ import { StockHistoryEodHandler } from '../handlers/stock/StockHistoryEodHandler
 import { OptionListStrikesHandler } from '../handlers/option/OptionListStrikesHandler';
 import { OptionListExpirationsHandler } from '../handlers/option/OptionListExpirationsHandler';
 import { OptionListDatesQuoteHandler } from '../handlers/option/OptionListDatesQuoteHandler';
+import { OptionHistoryQuoteHandler } from '../handlers/option/OptionHistoryQuoteHandler';
 // TODO: Import other handlers as they are implemented
 
 export class RequestHandlerFactory {
@@ -30,6 +31,7 @@ export class RequestHandlerFactory {
             new OptionListStrikesHandler(baseUrl),
             new OptionListExpirationsHandler(baseUrl),
             new OptionListDatesQuoteHandler(baseUrl),
+            new OptionHistoryQuoteHandler(baseUrl),
 
             // TODO: Add other handlers here
         ];
