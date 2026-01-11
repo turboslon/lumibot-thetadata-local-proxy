@@ -1,0 +1,151 @@
+{
+  "timestamp": "2026-01-11T00:42:47.839Z",
+  "request": {
+    "url": "http://127.0.0.1:25503/v3/option/history/eod?symbol=AAPL&expiration=20250117&strike=220&right=C&start_date=20241101&end_date=20241110&format=json",
+    "method": "GET",
+    "headers": {
+      "Accept": "application/json"
+    },
+    "queryParams": {
+      "symbol": "AAPL",
+      "expiration": "20250117",
+      "strike": "220",
+      "right": "C",
+      "start_date": "20241101",
+      "end_date": "20241110",
+      "format": "json"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-length": "1836",
+      "content-type": "application/json",
+      "date": "Sun, 11 Jan 2026 00:42:47 GMT",
+      "server": "Jetty(12.0.14)"
+    },
+    "body": {
+      "response": [
+        {
+          "contract": {
+            "symbol": "AAPL",
+            "expiration": "2025-01-17",
+            "right": "CALL",
+            "strike": 220
+          },
+          "data": [
+            {
+              "ask_size": 9,
+              "last_trade": "2024-11-01T15:59:31.528",
+              "created": "2024-11-01T17:15:55.428",
+              "ask_condition": 50,
+              "count": 274,
+              "volume": 1393,
+              "high": 13.85,
+              "low": 11.17,
+              "bid_size": 2,
+              "ask_exchange": 4,
+              "bid_exchange": 1,
+              "ask": 12.55,
+              "bid": 12.35,
+              "bid_condition": 50,
+              "close": 12.5,
+              "open": 11.5
+            },
+            {
+              "ask_size": 5,
+              "last_trade": "2024-11-04T15:59:39.256",
+              "created": "2024-11-04T17:16:56.205",
+              "ask_condition": 50,
+              "count": 139,
+              "volume": 409,
+              "high": 11.95,
+              "low": 10.5,
+              "bid_size": 31,
+              "ask_exchange": 42,
+              "bid_exchange": 11,
+              "ask": 11.95,
+              "bid": 11.5,
+              "bid_condition": 50,
+              "close": 11.55,
+              "open": 11.14
+            },
+            {
+              "ask_size": 94,
+              "last_trade": "2024-11-05T15:59:12.255",
+              "created": "2024-11-05T17:19:37.686",
+              "ask_condition": 50,
+              "count": 104,
+              "volume": 454,
+              "high": 12.6,
+              "low": 11.35,
+              "bid_size": 324,
+              "ask_exchange": 9,
+              "bid_exchange": 9,
+              "ask": 12.15,
+              "bid": 11.95,
+              "bid_condition": 50,
+              "close": 11.97,
+              "open": 11.35
+            },
+            {
+              "ask_size": 85,
+              "last_trade": "2024-11-06T15:59:27.005",
+              "created": "2024-11-06T17:21:57.016",
+              "ask_condition": 50,
+              "count": 186,
+              "volume": 663,
+              "high": 13.05,
+              "low": 10.5,
+              "bid_size": 34,
+              "ask_exchange": 65,
+              "bid_exchange": 11,
+              "ask": 10.9,
+              "bid": 10.7,
+              "bid_condition": 50,
+              "close": 10.78,
+              "open": 10.94
+            },
+            {
+              "ask_size": 1,
+              "last_trade": "2024-11-07T15:59:57.806",
+              "created": "2024-11-07T17:21:28.618",
+              "ask_condition": 50,
+              "count": 177,
+              "volume": 851,
+              "high": 13.8,
+              "low": 12.3,
+              "bid_size": 3,
+              "ask_exchange": 31,
+              "bid_exchange": 7,
+              "ask": 13.7,
+              "bid": 12.55,
+              "bid_condition": 50,
+              "close": 13.59,
+              "open": 12.3
+            },
+            {
+              "ask_size": 16,
+              "last_trade": "2024-11-08T15:59:52.113",
+              "created": "2024-11-08T17:17:41.982",
+              "ask_condition": 50,
+              "count": 129,
+              "volume": 534,
+              "high": 14.33,
+              "low": 12.72,
+              "bid_size": 76,
+              "ask_exchange": 7,
+              "bid_exchange": 69,
+              "ask": 13.3,
+              "bid": 13,
+              "bid_condition": 50,
+              "close": 13.17,
+              "open": 13.5
+            }
+          ]
+        }
+      ]
+    },
+    "rawText": "{\n\t\"response\": [\n\t\t{\n\t\t\t\"contract\": {\"symbol\":\"AAPL\",\"expiration\":\"2025-01-17\",\"right\":\"CALL\",\"strike\":220.000},\n\t\t\t\"data\": [\n\t\t\t\t{\"ask_size\":9,\"last_trade\":\"2024-11-01T15:59:31.528\",\"created\":\"2024-11-01T17:15:55.428\",\"ask_condition\":50,\"count\":274,\"volume\":1393,\"high\":13.85,\"low\":11.17,\"bid_size\":2,\"ask_exchange\":4,\"bid_exchange\":1,\"ask\":12.55,\"bid\":12.35,\"bid_condition\":50,\"close\":12.50,\"open\":11.50},\t\t\t\t{\"ask_size\":5,\"last_trade\":\"2024-11-04T15:59:39.256\",\"created\":\"2024-11-04T17:16:56.205\",\"ask_condition\":50,\"count\":139,\"volume\":409,\"high\":11.95,\"low\":10.50,\"bid_size\":31,\"ask_exchange\":42,\"bid_exchange\":11,\"ask\":11.95,\"bid\":11.50,\"bid_condition\":50,\"close\":11.55,\"open\":11.14},\t\t\t\t{\"ask_size\":94,\"last_trade\":\"2024-11-05T15:59:12.255\",\"created\":\"2024-11-05T17:19:37.686\",\"ask_condition\":50,\"count\":104,\"volume\":454,\"high\":12.60,\"low\":11.35,\"bid_size\":324,\"ask_exchange\":9,\"bid_exchange\":9,\"ask\":12.15,\"bid\":11.95,\"bid_condition\":50,\"close\":11.97,\"open\":11.35},\t\t\t\t{\"ask_size\":85,\"last_trade\":\"2024-11-06T15:59:27.005\",\"created\":\"2024-11-06T17:21:57.016\",\"ask_condition\":50,\"count\":186,\"volume\":663,\"high\":13.05,\"low\":10.50,\"bid_size\":34,\"ask_exchange\":65,\"bid_exchange\":11,\"ask\":10.90,\"bid\":10.70,\"bid_condition\":50,\"close\":10.78,\"open\":10.94},\t\t\t\t{\"ask_size\":1,\"last_trade\":\"2024-11-07T15:59:57.806\",\"created\":\"2024-11-07T17:21:28.618\",\"ask_condition\":50,\"count\":177,\"volume\":851,\"high\":13.80,\"low\":12.30,\"bid_size\":3,\"ask_exchange\":31,\"bid_exchange\":7,\"ask\":13.70,\"bid\":12.55,\"bid_condition\":50,\"close\":13.59,\"open\":12.30},\t\t\t\t{\"ask_size\":16,\"last_trade\":\"2024-11-08T15:59:52.113\",\"created\":\"2024-11-08T17:17:41.982\",\"ask_condition\":50,\"count\":129,\"volume\":534,\"high\":14.33,\"low\":12.72,\"bid_size\":76,\"ask_exchange\":7,\"bid_exchange\":69,\"ask\":13.30,\"bid\":13.00,\"bid_condition\":50,\"close\":13.17,\"open\":13.50}\n\t\t\t]\n\t\t}\n\t]\n}\n\n"
+  }
+}
