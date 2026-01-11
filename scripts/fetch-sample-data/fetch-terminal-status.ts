@@ -34,7 +34,7 @@ async function fetchAndCapture(): Promise<void> {
     };
 
     const url = new URL(endpoint, THETADATA_BASE_URL);
-    Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, v));
+    Object.entries(queryParams).forEach(([k, v]) => url.searchParams.set(k, String(v)));
 
     console.log(`Fetching: ${url.toString()}`);
 

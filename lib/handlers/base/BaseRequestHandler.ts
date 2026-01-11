@@ -29,7 +29,7 @@ export abstract class BaseRequestHandler implements RequestHandler {
             const response = await fetch(prepared.url, {
                 method: prepared.method,
                 headers: prepared.headers,
-                body: prepared.body
+                body: prepared.body as BodyInit
             });
 
             const rawText = await response.text();
