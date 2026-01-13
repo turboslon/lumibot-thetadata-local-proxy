@@ -7,6 +7,19 @@
 
 A local queue service proxy that enables [Lumibot's](https://github.com/Lumiwealth/lumibot) ThetaData backtesting to work with a **local ThetaData Terminal** instead of the Lumiwealth cloud infrastructure.
 
+## A non-AI note about this repo
+
+This whole thing was vibe-coded and has not been heavily tested.
+If you fix some issues for yourself, please consider contributing back to the repo. 
+Thank you!
+
+I also want to give a shoutout to the Lumiwealth team for their Lumibot! Huge thanks!
+
+[Lumibot Github Repo](https://github.com/Lumiwealth/lumibot)
+
+[Lumibot Documentation](https://lumibot.lumiwealth.com/index.html)
+
+
 ## Why This Project?
 
 Lumibot's ThetaData integration is designed for the Lumiwealth cloud Data Downloader. This creates barriers for developers who want to:
