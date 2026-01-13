@@ -40,4 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tools and configs
 lumibot/
+.kilocode/
+.agent/
+.cursor/
+plans/
