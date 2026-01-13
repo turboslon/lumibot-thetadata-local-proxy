@@ -35,7 +35,7 @@ This proxy acts as a **drop-in replacement** for the Lumiwealth Data Downloader 
 
 - ✅ **Drop-in replacement** — No Lumibot code changes required
 - ✅ **Queue-based processing** — Handles rate limiting automatically
-- ✅ **ThetaData V2/V3 API support** — Compatible with both API versions
+- ✅ **ThetaData V3 API** - Works with V3 (and converts data to V2 on the fly)
 - ✅ **Idempotent requests** — Correlation ID support prevents duplicate processing
 - ✅ **Memory-efficient** — Automatic cleanup of completed requests
 - ✅ **Real-time status** — Queue statistics and request status endpoints
